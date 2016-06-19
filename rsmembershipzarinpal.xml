@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.0" type="plugin" group="system" method="upgrade">
+	<name>PLG_RSM_ZARINPAL_NAME</name>
+	<author>Mohsen Ranjbar (mimrahe)</author>
+	<creationDate>June 2016</creationDate>
+	<copyright>Zarinpal.com</copyright>
+	<authorEmail>mimrahe@gmail.com</authorEmail>
+	<authorUrl>www.mimrahe.com</authorUrl>
+	<version>1.1.3</version>
+	<description>PLG_RSM_ZARINPAL_DESC</description>
+	<files>
+		<filename plugin="rsmembershipzarinpal">rsmembershipzarinpal.php</filename>
+		<filename>index.html</filename>
+	</files>
+	<languages folder="language/fa-IR">
+		<language tag="fa-IR">fa-IR.plg_system_rsmembershipzarinpal.ini</language>
+		<language tag="fa-IR">fa-IR.plg_system_rsmembershipzarinpal.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field type="text" name="merchant_id" default="" required="required" class="input-large" size="55" label="PLG_RSM_ZARINPAL_MERCHANT_ID" description="PLG_RSM_ZARINPAL_MERCHANT_ID_DESC"/>
+				<field name="test_mode" type="radio" default="1" class="btn-group" label="PLG_RSM_ZARINPAL_TEST_MODE" description="PLG_RSM_ZARINPAL_TEST_MODE_DESC">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+				<field name="gate_type" type="radio" default="0" label="PLG_RSM_ZARINPAL_GATE_TYPE" description="PLG_RSM_ZARINPAL_GATE_TYPE_DESC">
+					<option value="0">PLG_RSM_ZARINPAL_WEB_GATE</option>
+					<option value="1">PLG_RSM_ZARINPAL_ZARIN_GATE</option>
+				</field>
+				<field name="currency" type="radio" default="0" label="PLG_RSM_ZARINPAL_CURRENCY" description="PLG_RSM_ZARINPAL_CURRENCY_DESC">
+					<option value="0">PLG_RSM_ZARINPAL_TOMAN</option>
+					<option value="1">PLG_RSM_ZARINPAL_RIAL</option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>
