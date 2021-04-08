@@ -70,22 +70,22 @@ class plgSystemRSMembershipZarinPal extends JPlugin
             $session->set('transaction_custom', $transaction->custom);
             $session->set('membership_id', $membership->id);
 
-        /*    $requestContext = compact(
-                'MerchantID',
-                'Amount',
-                'Description',
-                'Email',
-                'Mobile',
-                'CallbackURL'
-            );*/
+            /*    $requestContext = compact(
+                    'MerchantID',
+                    'Amount',
+                    'Description',
+                    'Email',
+                    'Mobile',
+                    'CallbackURL'
+                );*/
 
-           // $request = $this->zarinPalRequest('request', $requestContext);
+            // $request = $this->zarinPalRequest('request', $requestContext);
 /////////////////////////////////////////////////////////////////////////////
             $data = array("merchant_id" => $MerchantID,
                 "amount" => $Amount,
                 "callback_url" => $CallbackURL,
-                "description" =>$Description,
-                "metadata" => [ "email" => $Email,"mobile"=>"0"],
+                "description" => $Description,
+                "metadata" => ["email" => $Email, "mobile" => "0"],
             );
             $jsonData = json_encode($data);
             $ch = curl_init('https://api.zarinpal.com/pg/v4/payment/request.json');
@@ -102,30 +102,39 @@ class plgSystemRSMembershipZarinPal extends JPlugin
             $err = curl_error($ch);
             $result = json_decode($result, true, JSON_PRETTY_PRINT);
             curl_close($ch);
-            $status="";
+            $status = "";
 /// //////////////////////////////////////////////////////////////////////////
-            if (!empty($result['errors'])){
+            if (!empty($result['errors'])) {
 
                 throw new Exception('connection_error');
 
-                $status= $result['errors']['code'];
-            }
-            else {
+                $status = $result['errors']['code'];
+            } else {
 
                 $status = $result['data']['code'];
             }
 
 
             if ($status == 100) {
-             //   $prefix = (bool)$this->params->get('test_mode') ? 'sandbox' : 'www';
-               // $postfix = (bool)$this->params->get('gate_type') ? '/ZarinGate' : '';
-                $Authority = $result['data']["authority"];
-                $app->redirect("https://www.zarinpal.com/pg/StartPay/".$Authority);
-            }else {
+                //   $prefix = (bool)$this->params->get('test_mode') ? 'sandbox' : 'www';
+                // $postfix = (bool)$this->params->get('gate_type') ? '/ZarinGate' : '';
+                /*   $Authority = $result['data']["authority"];
+                   $app->redirect("https://www.zarinpal.com/pg/StartPay/".$Authority);*/
+                echo '<html><body>
+<script type="text/javascript" src="https://cdn.zarinpal.com/zarinak/v1/checkout.js"></script>
+<script type="text/javascript">
+window.onload = function () {
+Zarinak.setAuthority("' . $result['data']['authority'] . '");
+Zarinak.showQR();
+Zarinak.open();
+};
+</script>
+</body></html>';
+
+            } else {
 
                 throw new Exception('status_' . $status);
             }
-
 
 
         } catch (Exception $e) {
@@ -179,8 +188,8 @@ class plgSystemRSMembershipZarinPal extends JPlugin
             $Authority = $input->getString('Authority');
             $Amount = $input->getInt('amount');
 
-           // $verifyContext = compact('MerchantID', 'Authority', 'Amount');
-           // $verify = $this->zarinPalRequest('verification', $verifyContext);
+            // $verifyContext = compact('MerchantID', 'Authority', 'Amount');
+            // $verify = $this->zarinPalRequest('verification', $verifyContext);
 
             /////////////////////////////////////////////////////////////
             $data = array("merchant_id" => $MerchantID, "authority" => $Authority, "amount" => $Amount);
@@ -200,14 +209,14 @@ class plgSystemRSMembershipZarinPal extends JPlugin
             /// ////////////////////////////////////////////////////////////
 
             //if (!$verify)
-               // throw new Exception('connection_error');
+            // throw new Exception('connection_error');
 
-            if(empty($result['errors'])){
+            if (empty($result['errors'])) {
 
-                $status=$result['errors']['code'];
+                $status = $result['errors']['code'];
             }
 
-           // $status = $verify->Status;
+            // $status = $verify->Status;
 
             if ($result['data']['code'] == 100) {
                 $RefID = $result['data']['ref_id'];
@@ -284,20 +293,20 @@ class plgSystemRSMembershipZarinPal extends JPlugin
      * @param $context
      * @return bool | soap client result
      */
-  /*  private function zarinPalRequest($type, $context)
-    {
-        try {
-            $prefix = $this->params->get('test_mode') ? 'sandbox' : 'www';
-            $client = new SoapClient("https://{$prefix}.zarinpal.com/pg/services/WebGate/wsdl", array('encoding' => 'UTF-8'));
+    /*  private function zarinPalRequest($type, $context)
+      {
+          try {
+              $prefix = $this->params->get('test_mode') ? 'sandbox' : 'www';
+              $client = new SoapClient("https://{$prefix}.zarinpal.com/pg/services/WebGate/wsdl", array('encoding' => 'UTF-8'));
 
-            $type = 'Payment' . ucfirst($type);
-            $result = $client->$type($context);
+              $type = 'Payment' . ucfirst($type);
+              $result = $client->$type($context);
 
-            return $result;
-        } catch (SoapFault $e) {
-            return false;
-        }
-    }*/
+              return $result;
+          } catch (SoapFault $e) {
+              return false;
+          }
+      }*/
 
     /**
      * fix zarinpal amount
